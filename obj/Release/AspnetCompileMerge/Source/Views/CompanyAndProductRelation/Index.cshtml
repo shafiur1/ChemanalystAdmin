@@ -1,0 +1,103 @@
+﻿@model ChemAnalyst.ViewModel.CompanyProfAndCompanyProductRelationFormViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="update-profile-wrapper">
+
+    @*<h3><a href="@Url.Action("Role","Admin")" class="btn btn-info"><i class="fa fa-list"></i> Role List</a></h3>*@
+
+    <div class="white-wrapper">
+
+        <div class="col-md-6 col-lg-7 col-md-offset-2">
+
+            <div class="eq-form">
+
+                <div class="change" style="font-size: 95px;">
+                    <i class="fa fa fa-users" aria-hidden="true"></i>
+                    <p>Company and Product Reletionship</p>
+                </div>
+
+                <div class="eq-form-box">
+                    @using (Html.BeginForm("SaveCompanyAndProductRelation", "CompanyAndProductRelation", FormMethod.Post, new { id= "myForm" }))
+                    {
+
+                        <div class="col-md-4 col-lg-12 form-group">
+                            @Html.DropDownListFor(p => p.CompanyProfId, new SelectList(Model.CompanyProf, "Id", "Name"), "--Select Company--", new { @class = "form-control", @required= "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-12 form-group multiselect">
+                            <div id="dropdown1" class="selectbox" onclick="showCheckBoxes()">
+
+                                <select class="form-control">
+                                    <option>Select Product</option>
+                                </select>
+                                <div class="overSelect"></div>
+                            </div>
+                            <div id="checkboxes" style="display:none;margin-top: 15px; height: 150px; overflow: scroll; border-style: groove; padding: 5px 15px 15px;">
+                                @for (int i = 0; i < Model.CompanyProduct.Count(); i++)
+                                {
+                                    @*@Html.CheckBoxFor(p => Model.CompanyProduct[i].IsSelected,new { @class = "checkboxes[]" }) <span style="padding-right: 2px;"></span> @Html.DisplayFor(p => Model.CompanyProduct[i].ProductName) <span style="padding-right: 15px;"></span>
+            @Html.HiddenFor(p => Model.CompanyProduct[i].id)*@
+                                    <div>
+                                        <label id="@Model.CompanyProduct[i].id">
+                                            @Html.CheckBoxFor(p => Model.CompanyProduct[i].IsSelected, new { @class = "checkboxes[]" })
+                                            @Html.DisplayFor(p => Model.CompanyProduct[i].ProductName) <span style="padding-right: 15px;"></span>
+                                            @Html.HiddenFor(p => Model.CompanyProduct[i].id)
+                                        </label>
+                                    </div>
+                                }
+
+                            </div>
+                                </div>
+                            <div class="btn-wrapper">
+
+                                @*<a class="gray-btn" href="@Url.Action("Role","Admin")">Cancle</a>*@
+
+                                <input type="submit" class="btn btn-success" value="Save" >
+                            </div>
+
+                    }
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script>
+    function showCheckBoxes() {
+        $("#checkboxes").toggle();
+    }
+
+
+    $("#myForm").submit(function (e) {
+        debugger
+        var selected = [];
+        $('#checkboxes input:checked').each(function () {
+            debugger;
+            selected.push($(this).attr('name'));
+        });
+        debugger
+        if (selected.length == 0) {
+            swal("Warning", "Please select at least one product.", "error");
+            e.preventDefault();
+        }
+        else {
+            return true;
+        }
+    });
+
+
+   
+
+
+
+</script>

@@ -1,0 +1,92 @@
+﻿@model List<ChemAnalyst.Models.SA_MarketFileList>
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<title>Chem Analyst file list </title>
+<head>
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+    <script>
+
+        $(document).ready(function () {
+            //$('#FileList').DataTable({
+            //    "ajax": {
+            //        "url": "../ChemicalPricing/GetFileList",
+            //        "type": "GET",
+            //        "datatype": "json"
+            //    },
+            //    fields: [{
+            //        label: 'CreatedDate:',
+
+            //    }],
+
+            //    "columns": [
+            //        { "data": "FileName" },
+            //        { "data": "Product" },
+            //         { "data": "CreatedBy" },
+            //        {
+            //            "data": "CreatedDate", type: "datetime"
+
+            //        },
+
+
+            //    ]
+            //});
+
+            $('#FileList').DataTable();
+        });
+
+
+    </script>
+</head>
+
+<div class="update-profile-wrapper">
+
+    <h3><a href="@Url.Action("Index", "MarketAnalysis")" class="btn btn-success"><i class="fa fa-plus"></i> Market Analysis Import</a></h3>
+
+
+    <div class="white-wrapper">
+        </br>
+        <div class="data-detail-wrapper table-responsive">
+
+            <table id="FileList" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Product Name</th>
+                        @*<th>Created By</th>*@
+                        <th width="130">Created</th>
+                        @if (ChemAnalyst.Common.Helpers.Global.AdminRole == Convert.ToString(Session["UserRole"]))
+                        {
+                            <th>Action</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td><a href="~/MarketAnalysisImportfile/@item.FileName">@item.FileName</a>  </td>
+                        <td>@item.Product</td>
+                        <td>@item.CreatedDate</td>
+                        @if (ChemAnalyst.Common.Helpers.Global.AdminRole == Convert.ToString(Session["UserRole"]))
+                        {
+                            <td><a href="../MarketAnalysis/DeleteMarketAnalysis?fileName=@(item.FileName != null ? item.FileName.Replace(".","___") : "")"><i class="fa fa-trash-o fa-lg"></i></a></td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+
+
+
+
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,203 @@
+﻿@model ChemAnalyst.ViewModel.IndustryViewModel
+@{
+    ViewBag.Title = "Free Trail";
+    Layout = "~/Views/Shared/_LayoutUser4.cshtml";
+}
+    <div class="inner-banner">
+        <img src="~/images/about-banner.jpg">
+        <h1>Free Trial</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Free Trial</li>
+        </ol>
+    </div>
+<div class="page-content">
+    <div class="static-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="filter-form-checkbox-btn">
+                        <p>Free Trial - We provide 24 hours of free access to one of our selected products on ChemAnalyst. Please fill the registration form and our team will activate your free trial subscription. Please select the options below to activate your free trial:  </p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="filter-chk-list">
+                                    <label class="c-lbl">
+                                        Daily/Monthly/Yearly Chemical Pricing
+                                        <input type="checkbox" checked="checked" value="Daily/Monthly/Yearly Chemical Pricing" id="DailyMonthlyYearly" name='sport'>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="filter-chk-list">
+                                    <label class="c-lbl">
+                                        Product Analysis
+                                        <input type="checkbox" value="Product Analysis" id="ProductAnalysis" name='sport'>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="filter-chk-list">
+                                    <label class="c-lbl">
+                                        Company Profiles
+                                        <input type="checkbox" value="Company Profiles" id="CompanyProfiles" name='sport'>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="filter-chk-list">
+                                    <label class="c-lbl">
+                                        Latest News & Deals
+                                        <input type="checkbox" value="Latest News & Deals" id="NewsDeal" name='sport'>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="static-desc contact-blue-box mt-0">
+                        <div id="quotationForm" class="eq-form mt-0">
+                            @*Cnt find Studs controller*@
+                            @*@using (Html.BeginForm("Save", "Studs", FormMethod.Post))*@
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input id="txtName" name="form_name" class="form-control" type="text" placeholder="Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input id="txtCorpEmail" name="form_email" class="inputtype form-control required email" type="email" placeholder="Corporate Email " required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input id="txtOrganisation" name="form_phone" class="inputtype form-control required" type="text" placeholder="Company / Organisation" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @*<input id="txtCountry" name="form_phone" class="inputtype form-control required" type="text" placeholder="Country" required>*@
+                                        @Html.DropDownList("txtCountry", ChemAnalyst.DAL.ProductDataStore.GetCountry(), "Select Country", new { @class = "form-control", @name = "txtCountry", @style = "color: #fff; background:#4b80e0" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @*<input id="txtState" name="form_phone" class="inputtype form-control required" type="text" placeholder="State" required>*@
+                                        @Html.DropDownList("txtState", ChemAnalyst.DAL.ProductDataStore.GetState(), "Select State", new { @class = "form-control", @name = "txtState", @style = "color: #fff; background:#4b80e0" })
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input id="txtPhone" onkeypress="return isNumberKey(event)" name="form_phone" class="inputtype form-control required" type="text" placeholder="Mobile / Office Landline No." required>
+                                        <span style="color:#fff; font-style:italic; font-size:12px">(*Input without country code and special characters)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @*<input id="txtAreaInterest" name="form_phone" class="inputtype form-control required" type="text" placeholder="Area of Interest" aria-required="true">*@
+                                        @Html.DropDownList("txtAreaInterest", ChemAnalyst.DAL.ProductDataStore.GetProductForTrial(), new { @multiple = "multiple", @class = "form-control", @name = "txtAreaInterest", @id = "txtAreaInterest", @style = "color: #fff; background:#4b80e0" })
+
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        @*<input id="txtUserType" name="form_user" class="inputtype form-control required" type="text" placeholder="User Type" aria-required="true">*@
+                                        @Html.DropDownList("txtUserType", ChemAnalyst.DAL.ProductDataStore.GetUserType(), "Select User Type", new { @class = "form-control", @name = "txtUserType", @style = "color: #fff; background:#4b80e0" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input id="txtSubject" name="subject" class="inputtype form-control required" type="text" placeholder="Subject" aria-required="true">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="txtQuery" name="form_message" class="inputtype form-control required" rows="5" placeholder="Query" aria-required="true"></textarea>
+                            </div>
+                            <div class="form-group mt30">
+                                <input name="form_botcheck" class="form-control" type="hidden" value="">
+                                <button id="btnSave" type="submit" class="common-btn" data-loading-text="Please wait...">Submit</button>
+                            </div>
+                            @*}*@
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                    <aside>
+                        <h3><i class="fa fa-bell-o"></i> News <a href="@Url.Action("NewsHome","NewsAndDeals")" class="pull-right" style="font-size: 14px; margin-top: 4px; color:#fff">View all</a></h3>
+
+
+                        <div class="side-news-feed">
+
+
+                            @foreach (var news in Model.NewsList)
+                            {
+                                <div class="news-feed-col">
+                                    <a style="font-size: 14px;font-weight: 600;" href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = news.GenerateItemNameAsParam() })">
+                                        @{
+
+                                            <span>
+                                                @Html.Raw(WebUtility.HtmlDecode(news.NewsName))
+                                            </span>
+
+
+                                        }
+
+                                        <div class="right-news-desc2" style="font-size:14px">
+                                            <br />
+                                            <p><i class="fa fa-calendar-o"></i>@news.CreatedTime.ToString("MMM/yyyy")</p>
+                                        </div>
+                                    </a>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                        <div class="mt-4">
+                            <h3><i class="fa fa-thumbs-up"></i> Top Deals <a href="@Url.Action("DealsHome","NewsAndDeals")" class="pull-right" style="font-size: 14px; margin-top: 4px; color:#fff">View all</a></h3>
+                            <div class="side-news-feed" style="">
+                                @foreach (var item in Model.DealsList)
+                                {
+                                    <div class="news-feed-col">
+                                        <a style="font-size: 14px;font-weight: 600;" href="@Url.Action("DealsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">
+                                            @{
+
+                                                <span>
+                                                    @Html.Raw(WebUtility.HtmlDecode(item.DealsName))
+                                                </span>
+
+
+                                            }
+                                            <div class="right-news-desc2">
+                                                <br />
+                                                <p><i class="fa fa-calendar-o"></i>@item.CreatedTime.Value.ToString("MMM/yyyy")</p>
+                                            </div>
+                                        </a>
+
+                                    </div>
+                                }
+
+                            </div>
+                            </div>
+
+                    </aside>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,116 @@
+﻿@model ChemAnalyst.Models.SA_Company
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="update-profile-wrapper">
+
+    <h3><a href="@Url.Action("AllCompanyProf", "CompanyProf")" class="btn btn-info"><i class="fa fa-list"></i> Companies List</a></h3>
+
+    <div class="white-wrapper">
+
+        <div class="col-md-6 col-lg-7 col-md-offset-2">
+
+            <div class="eq-form">
+                @if (Model.id > 0)
+                {
+                    <div class="change">
+                        <img src="~/images/@Model.Logo" alt="" height="95px" width="95px" />
+                        <p>Update Company Profile</p>
+                    </div>
+                }
+                else
+                { <div class="change">
+                    <img src="~/images/change-img.jpg" alt="" />
+                    <p>Add New User</p>
+                </div>
+                }
+
+                <div class="eq-form-box">
+                    @using (Html.BeginForm("SaveCompanyProf", "CompanyProf", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div style="visibility:hidden">
+                            @Html.TextBoxFor(model => model.id, new { @class = "form-control", @placeholder = "Title * ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Company Name * ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @placeholder = "Description* ", required = "required" })
+                        </div>
+
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.RegDate, new { @class = "form-control", @placeholder = "RegDate * ", required = "required" })
+                        </div>
+
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.CIN, new { @class = "form-control", @placeholder = "CIN * " })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.Category, new { @class = "form-control", @placeholder = "Category * ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.Address, new { @class = "form-control", @placeholder = "Address * ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.NOE, new { @class = "form-control", @placeholder = "No. of employee * ", required = "required"})
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.CEO, new { @class = "form-control", @placeholder = "CEO* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.Meta, new { @class = "form-control", @placeholder = "Meta* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.MetaDescription, new { @class = "form-control", @placeholder = "MetaDescription* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.website, new { @class = "form-control", @placeholder = "Website* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.phoneNo, new { @class = "form-control", @placeholder = "PhoneNo* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.fax, new { @class = "form-control", @placeholder = "Fax* ", required = "required" })
+                        </div>
+                        <div class="col-md-4 col-lg-6 form-group">
+                            @Html.TextBoxFor(model => model.EmailId, new { @class = "form-control", @placeholder = "FEmailId* ", type = "email", required = "required" })
+                        </div>
+                        @Html.HiddenFor(c => c.id)
+                        @Html.HiddenFor(c => c.Logo)
+
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <input type="file" name="file" class="form-control" />
+
+                            </div>
+                        </div>
+
+                        <div class="btn-wrapper">
+                            <a class="gray-btn" href="@Url.Action("AllCompanyProf","CompanyProf")">Cancle</a>
+                            <input type="submit" class="btn btn-success" value="Update Entry">
+                        </div>
+
+                    }
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts
+{
+    <script src="~/scripts/jquery.validate-vsdoc.js"></script>
+    <script src="~/scripts/jquery.validate.js"></script>
+    <script src="~/scripts/jquery.validate.min.js"></script>
+    <script src="~/scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+
+}

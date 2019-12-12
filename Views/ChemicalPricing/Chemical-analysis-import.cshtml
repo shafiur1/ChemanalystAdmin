@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<title>Chem Analyst </title>
+@*<link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="~/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="~/css/build.css" type="text/css" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">*@
+<script type="text/javascript">
+    $("body").on("change", "#ddlProduct", function () {
+        var c = $(ddlProduct).find("option:selected").val();
+        // alert(c)
+        $("#hdproductid").val($(ddlProduct).find("option:selected").val());
+    });
+    $("body").on("change", "#type", function () {
+        $("#hdImpType").val($(type).find("option:selected").text());
+    });
+</script>
+
+
+
+
+
+
+
+<div class="update-profile-wrapper">
+
+    <h3>Chemical Pricing Import</h3>
+
+
+
+    <div class="white-wrapper">
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="">
+                <div class="form-group">
+                    <div style="height:60PX"></div>
+                    @*<span style="color:green"> @ViewBag.Messge</span>*@
+
+                    @{
+                        if (ViewBag.Status == "Fail")
+                        {
+                            if (@ViewBag.Messge != null)
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewBag.Messge
+                                </div>
+
+                            }
+                        }
+                        else
+                        {
+                            if (@ViewBag.SuccesMessge != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @ViewBag.SuccesMessge
+                                </div>
+
+                            }
+                        }
+
+
+
+                    }
+
+
+                </div>
+
+
+            </div>
+            <div class="import-form eq-form-box">
+
+                <div class="change-pass-box">
+                    @using (Html.BeginForm("MonthlyUpload", "ChemicalPricing", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+
+                        <div class="col-sm-4 col-lg-12 form-group">
+
+                            @Html.DropDownList("ddlProduct", new SelectList(ViewBag.ProductList, "Value", "Text"), "Please select Product", new { @id = "ddlProduct", @class = "form-control", required = "required" })
+                            @Html.Hidden("hdproductid", null, new { @id = "hdproductid" })
+                            <select class="form-control" id="type" required>
+                                <option value="">Select Import File type Type</option>
+                                <option value="1">Yearly</option>
+                                <option value="2">Monthly</option>
+                                @*<option value="3">Quarterly</option>*@
+                                <option value="6">Weekly</option>
+                                <option value="4">Daily Data Import</option>
+                                <option value="4">Daily Retail</option>
+                                <option value="5">Daily Bulk</option>
+                                <option value="3">Chemical 1</option>
+                                <option value="4">Chemical 2</option>
+                                <option value="5">Chemical 3</option>
+                                <option value="4">Chemical 4</option>
+                                <option value="5">Chemical 5</option>
+                                <option value="5">Chemical 6</option>
+
+                            </select>
+                            @Html.Hidden("Typelist", null, new { @id = "hdImpType" })
+
+
+
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <input type="file" name="file" class="custom-file-input" required />
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                @Html.TextArea("UploadFileDiscription", new { @class = "form-control", @rows = 4, @placeholder = "Description * ", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                @Html.CheckBox("ReplaceData")
+                                <label for="inlineCheckbox2">Do you want to Replace / delete existing file? </label>
+                            </div>
+                        </div>
+                        <div class="btn-wrapper">
+
+                            <a class="btn gray-btn" href="@Url.Action("ChemicalPricingList", "ChemicalPricing")">Cancel</a>
+                            @*<input type="reset" class="btn gray-btn" value="Cancel" />*@
+                            <input type="submit" class="btn blue-btn" value="Upload">
+
+
+                        </div>
+
+                    }
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+</div>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.custom-file-input').change(function (e) {
+            var productName = $("#ddlProduct option:selected").text().trim();
+            var subType = $("#type option:selected").text().trim();
+            var fileName = e.target.files[0].name;
+            var nameArr = fileName.split('.')[0].split('_');
+            if (nameArr.length > 0) {
+                if (!(nameArr[0].toLowerCase() === productName.toLowerCase() && nameArr[1].toLowerCase() === subType.toLowerCase())) {
+                    swal({
+                        text: "The selected file is Incorrect. Please check and upload again"
+                    })
+                        .then(() => {
+                            document.location.reload(true);
+                        });
+                    //$($('.custom-file-input')[0]).val('')//code to remove file incase needed
+                    $('input[type=submit]').attr('disabled', 'disabled');
+                } else {
+                    $('input[type=submit]').removeAttr('disabled');
+                }
+            }
+        });
+    });
+</script>

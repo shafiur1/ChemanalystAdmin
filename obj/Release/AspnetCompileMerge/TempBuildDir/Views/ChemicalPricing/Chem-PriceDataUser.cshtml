@@ -1,0 +1,1023 @@
+﻿@model ChemAnalyst.ViewModel.DealsDetailsViewModel
+
+@{
+
+    var Product = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.product);
+    var ChartType = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ChartType);
+    var range = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.range);
+    var Category = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Category);
+
+    var fromdate = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.FromDate);
+    var todate = Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ToDate);
+}
+
+@{
+    if (Session["UserRole"] != null && Session["UserRole"].ToString().ToUpper() == "CUSTOMER")
+    {
+        Layout = "~/Views/Shared/_LayoutCustomer_chemical.cshtml";
+    }
+
+
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
+
+    <title>Chem Analyst </title>
+    <link href="~/css/oswald-font.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/style2.css" type="text/css" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/css/oswald-font.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css">
+    <link rel="shortcut icon" href="~/mages/favicon.ico">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/css/custom.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/bootstrap-multiselect.css">
+
+    <style>
+        #myModal .modal-content {
+            background-color: transparent;
+        }
+
+        /*#myModal .modal-dialog {
+            max-width: 790px;
+            height: 350px;
+            background-image: url(../images/subscribe-bg.png);
+            top: 15%;
+            background-size: cover;
+        }*/
+
+        .freeSub {
+            color: #fff;
+            padding: 50px 50px 0px 30px;
+        }
+
+            .freeSub h2 {
+                text-transform: uppercase;
+                color: #000000;
+            }
+
+            .freeSub a.btn.btn-yellow {
+                color: #000000;
+                background: yellow;
+                text-transform: uppercase;
+            }
+
+            .freeSub a.text-center {
+                color: #fff;
+                margin-top: 10px;
+            }
+
+        ::placeholder { /* Firefox, Chrome, Opera */
+            color: #fff;
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #fff;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            color: #fff;
+        }
+
+        #ddlRange, #category, #ddlProduct, #ddlChart, #fromdate, #todate {
+            color: #fff !important;
+            background-color: #337ab7 !important;
+            border-color: #337ab7 !important;
+        }
+
+        /*To hide option in comparison*/
+        .multiselect-container > li.disabled {
+            display: none;
+        }
+        /*To hide option in comparison*/
+        .true{
+            background-color:green;
+        }
+    </style>
+
+</head>
+
+
+<body oncontextmenu="return false;">
+    <div style="overflow-y:scroll; max-height:650px">
+        <div class="page-content">
+            <div class="update-profile-wrapper static-page">
+                <div class="white-wrapper padbox">
+
+                    <div class="filter-chart-type">
+                        @using (Html.BeginForm("ShowUserChart", "ChemicalPricing", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><i class="fa fa-bars"></i> Category</p>
+                                    @Html.DropDownList("category", new SelectList(ViewBag.ProductList, "Value", "Text"), "Please Select Category", new { @id = "category", @class = "btn btn-primary width100", required = "required", oninvalid = "this.setCustomValidity('Please Select Category')", onchange = "try{setCustomValidity('')}catch(e){}" })
+                                </div>
+                                <div class="col-md-4">
+                                    <p><i class="fa fa-list"></i> Product</p>
+                                    <select class="btn  btn-primary  width100 bt" id="ddlProduct" name="ddlProduct" required="required" oninvalid="this.setCustomValidity('Please select product')" onchange="try{setCustomValidity('')}catch(e){}"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><i class="fa fa-random"></i> Range</p>
+                                    <select id="ddlRange" name="ddlRange" class="btn btn-primary width100" required="required" oninvalid="this.setCustomValidity('Please select Range')" onchange="try{setdtval();setCustomValidity('')}catch(e){}">
+                                        <option value="">Select Range</option>
+                                        <option value="Yearly">Yearly</option>
+                                        <option value="Monthly">Monthly</option>
+                                        @*<option value="Quarterly">Quarterly</option>*@
+                                        <option value="Weekly">Weekly</option>
+                                        <option value="Daily Retail">Daily Retail</option>
+                                        <option value="Daily Bulk">Daily Bulk</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4  mt10">
+                                    <p><i class="fa fa-bar-chart"></i> Chart Types</p>
+                                    <select class="btn btn-primary width100" id="ddlChart" name="ddlChart">
+                                        <option value="line">Line Chart</option>
+                                        <option value="bar">Bar Chart</option>
+                                        @*<option value="pie">Pie Chart</option>*@
+                                    </select>
+                                </div>
+                                <div style="display:@(ViewBag.QYears == null ? "" : "none")" class="col-md-4 dtcol mt10">
+                                    <p><i class="fa fa-bar-chart"></i> From Date</p>
+                                    <input type="text" class="btn btn-primary width100" placeholder="Select Date" id="fromdate" name="fromdate" autocomplete="off" />
+                                </div>
+                                <div style="display:@(ViewBag.QYears == null ? "" : "none")" class="col-md-4 dtcol mt10">
+                                    <p><i class="fa fa-bar-chart"></i> To Date</p>
+                                    <input type="text" class="btn btn-primary width100" placeholder="Select Date" id="todate" name="todate" autocomplete="off" />
+                                </div>
+                                <div style="display:@(ViewBag.QYears != null ? "" : "none")" class="col-md-4 yrcol  mt10">
+                                    <p><i class="fa fa-bar-chart"></i> Year</p>
+                                    <select class="btn btn-primary width100" id="ddlyear" name="ddlyear">
+                                        @{
+                                            if (ViewBag.QYears != null)
+                                            {
+                                                foreach (var item in ViewBag.QYears)
+                                                {
+                                                    <option value="@item.Year">@item.Year</option>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <option value="@DateTime.Now.Year">@DateTime.Now.Year</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div style="display:@(ViewBag.FromYears != null ? "" : "none")" class="col-md-4 FromYearscol  mt10">
+                                    <p><i class="fa fa-bar-chart"></i> From Year</p>
+                                    @Html.DropDownListFor(m => m.FromYear, ChemAnalyst.DAL.ProductDataStore.GetUniqueYearsChemical(), "Select from", new { @class = "btn btn-primary width100", @id = "ddlFyear", @name = "ddlFyear", onchange = "changeFrom()" })
+                                </div>
+                                <div style="display:@(ViewBag.ToYears != null ? "" : "none")" class="col-md-4 ToYearscol  mt10">
+                                    <p><i class="fa fa-bar-chart"></i> To Year</p>
+                                    @Html.DropDownListFor(m => m.ToYear, ChemAnalyst.DAL.ProductDataStore.GetUniqueYearsChemical(), "Select to", new { @class = "btn btn-primary width100", @id = "ddlToYear", @name = "ddlToYear" })
+                                </div>
+
+                                <div class="col-md-4 mt10">
+                                    <p>
+                                        <i class="fa fa-compress"></i> Comparison
+                                    </p>
+                                    <select name="example-getting-started" id="example-getting-started" class="btn btn-primary width100" multiple="multiple"> </select>
+                                </div>
+                                <input type="hidden" id="MaxValue" name="MaxValue" value="" />
+                                <input type="hidden" id="MinValue" name="MinValue" value="" />
+                                <input type="hidden" id="ClearValue" name="ClearValue" value="" />
+                                <input type="hidden" id="hiddenLegends" name="hiddenLegends" />
+
+                                <div class="col-md-2 mt10" style="max-width: 10%;padding: 14px 0px 0px 15px;">
+                                    <button type="submit" class="btn btn-green mt27" id="ViewChart" value="ViewChart" name="submit">
+                                        <i class="fa fa-refresh"></i>
+                                        View Chart
+                                    </button>
+                                </div>
+                                <div class="col-md-2 mt10" style="max-width: 10%;padding: 14px 0px 0px 25px;">
+                                    <button id="clearSelection" class="btn btn-green mt27">
+                                        <i class="fa fa-refresh"></i>
+                                        Clear Comparison
+                                    </button>
+                                </div>
+                                <div class="col-md-4 mt10" style="margin-left: 125px;text-align: right;">
+                                    @*<a href="javascript:void(0)" id="exportpdf2" onclick="generatePDF()" class="text-primary" style="margin-top:40px">Export PDF</a>
+                                    <a href="javascript:void(0)" id="exportxls2" onclick="exportToExcel('tblRegisteredUsers', 'Chemical-Pricing.')" class="text-primary" style="margin-left: 25px;">Export Excel</a>*@
+                                    <a href="#" onclick="return confirm('Buy subscription to download PDF')" class="text-primary" style="margin-top:35px">Export PDF</a>
+                                    <a href="#" onclick="return confirm('Buy subscription to download Excel')" class="text-primary" style="margin-left: 25px;">Export Excel</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+
+                    <div class="filter-checkbox-btn">
+
+                        @if (ViewBag.FisrtTime != null)
+                        {
+                            <span> <b> Please select  options to view data.</b></span>
+
+                        }
+                        else
+                        {
+                            <span> <b>There is no data available with selected range.</b></span>
+
+                        }
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content login-pic">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="login-pic">
+                                <div class="freeSub">
+                                    <h2 style="color:black">Get Chemical Pricing in few-clicks.</h2>
+                                    <a target="_blank" href="@Url.Action("FreeTrail", "ChemAnalyst")" class="btn btn-yellow">Subscribe Today</a>
+                                    <a href="~/ChemicalPricing/ChecmPriceYearlyChart?Customer=True" class="btn btn-yellow">Go Back</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("LogOut", "Login", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <button type="submit" id="ViewChartLogout" value="ViewChartLogout" name="submit" style="display:none"></button>
+    }
+
+    @*<script src="~/js/jquery-3.3.1.slim.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    @*<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/bootstrap-multiselect.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="~/js/Chart.min.js"></script>
+
+    <script src="~/js/owl.carousel.js"></script>
+    <script src="~/js/wow.min.js"></script>
+    <script src="~/js/honey-custom.js"></script>
+
+    <script src="~/js/utils.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @*<script src="jquery.js"></script>*@
+    <script src="~/js/jquery.datetimepicker.full.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script>
+
+        function SubmitResetForm() {
+            $("#submit").trigger("click");
+        }
+
+        $(document).ready(function () {
+        });
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#todate").datepicker("option", "disabled", true);
+            var today = new Date();
+            jQuery('#fromdate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                maxDate: today,
+                onSelect: function (selected) {
+                    var diff = 30;
+                    if ($("#ddlRange").val() == "Yearly") {
+                        diff = (365 * 500);
+                    }
+                    if ($("#ddlRange").val() == "Monthly") {
+                        diff = (365 * 3);
+                    }
+                    if ($("#ddlRange").val() == "Quarterly") {
+                        diff = (365);
+                    }
+                    if ($("#ddlRange").val() == "Weekly" || $("#ddlRange").val() == "Daily Retail" || $("#ddlRange").val() == "Daily Bulk") {
+                        diff = (29);
+                    }
+                    if ($("#ddlRange").val() == "Daily Retail" || $("#ddlRange").val() == "Daily Bulk") {
+                        var det = new Date(selected);
+                        det.setDate(det.getDate() + diff);
+                        $("#todate").datepicker("option", "disabled", false);
+                        $("#todate").datepicker("option", "maxDate", det);
+                    }
+                    else {
+                        var dt = new Date(selected);
+                        dt.setDate(dt.getDate() + diff);
+                        $("#todate").removeAttr("disabled");
+                        $("#todate").datepicker("option", "maxDate", dt);
+
+                        $("#todate").datepicker("option", "minDate", new Date(selected));
+                    }
+                }
+            });
+            jQuery('#todate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function (selected) {
+                    maxDate: today
+                        ;
+                    var diff = 30;
+                    if ($("#ddlRange").val() == "Yearly") {
+                        diff = (365 * 500);
+                    }
+                    if ($("#ddlRange").val() == "Monthly") {
+                        diff = (365 * 3);
+                    }
+                    if ($("#ddlRange").val() == "Quarterly") {
+                        diff = (365);
+                    }
+                    if ($("#ddlRange").val() == "Weekly" || $("#ddlRange").val() == "Daily Retail" || $("#ddlRange").val() == "Daily Bulk") {
+                        diff = (29);
+                    }
+
+                    var dt = new Date(selected);
+                    dt.setDate(dt.getDate() - diff);
+                    if ($("#ddlRange").val() != "Yearly") {
+                        var dtt = $('#fromdate').datepicker('getDate');
+
+                        var dt = new Date(dtt);
+                        dt.setDate(dt.getDate() + diff);
+
+                        $("#todate").datepicker("option", "maxDate", dt);
+                        $("#todate").datepicker("option", "minDate", new Date(dtt));
+                    }
+                }
+            });
+
+        });
+
+        function resetdates() {
+
+            var diff = 30;
+            if ($("#ddlRange").val() == "Yearly") {
+                diff = (365 * 500);
+            }
+            if ($("#ddlRange").val() == "Monthly") {
+                diff = (365 * 3);
+            }
+            if ($("#ddlRange").val() == "Quarterly") {
+                diff = (365);
+            }
+            if ($("#ddlRange").val() == "Weekly" || $("#ddlRange").val() == "Daily Retail" || $("#ddlRange").val() == "Daily Bulk") {
+                diff = (29);
+            }
+
+            var dt = new Date();
+            // $('#todate').datepicker('setDate', dt);
+            dt.setDate(dt.getDate() - diff);
+            if ($("#ddlRange").val() != "Yearly") {
+
+                if ($("#ddlRange").val() == "Monthly") {
+                    var d = new Date();
+
+                    $('#fromdate').datepicker('setDate', new Date(dt));
+                    $('#todate').datepicker('setDate', 'today');
+                } else {
+                    $('#fromdate').datepicker('setDate', dt);
+                    $('#todate').datepicker('setDate', 'today');
+                }
+            } else {
+                $('#fromdate').val('');
+                $('#todate').val('');
+            }
+        }
+        function exportToExcel(tableId, tableName) {
+            //showloader();
+            ;
+            setTimeout(function () { export_table_to_excel(tableId, 'xlsx' || 'xlsx', tableName); }, 100);
+
+
+        }
+
+        function export_table_to_excel(id, type, fn) {
+            ;
+
+            var table;
+            if (id == 'tbllince') {
+                $("#exportResult").show();
+                // tbllince
+                table = $('#tbllince').tableToJSON();
+                $("#exportResult").hide();
+            }
+            else {
+                table = $('#tblRegisteredUsers').tableToJSON();
+            }
+            //var data = JSON.stringify(table);
+            var data = JSON.parse(JSON.stringify(table));
+
+            //console.log(data)
+            // setTimeout(function () {  }, 5000);
+            var ws = XLSX.utils.json_to_sheet(data);
+
+            /* add to workbook */
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "tbl");
+
+            /* generate an XLSX file */
+            XLSX.writeFile(wb, fn + type);
+            //setTimeout(function () { hideloader(); }, 100);
+        }
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+
+            var range = $(ddlRange).find("option:selected").val();
+            var ddlCustomers = $("#ddlChart");
+
+            if (range == "Yearly") {
+                $(".dtcol").hide();
+                $(".FromYearscol").show();
+                $(".ToYearscol").show();
+            }
+            if (range == "Daily Retail" || range == "Daily Bulk") {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option>');
+            }
+            else if (range == "Quarterly") {
+                ddlCustomers.empty().append('<option selected="selected" value="bar" >Bar Chart</option>');
+            }
+            else if (range == "Monthly") {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+            else if (range == "Weekly") {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+            else {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+
+            ShowCommentariesByDeafult()
+
+
+            $("#ddlProduct").change(function () {
+                ;
+                var ProductId = $(ddlProduct).find("option:selected").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../ChemicalPricing/CheckAccess",
+                    data: "{ ProductId:" + ProductId + "}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        ;
+                        if (response == "Access") {
+
+                        }
+                        else if (response == "SubscriptionExpired") {
+                            swal("Your subscription has been expired!").then(function myfunction() {
+                                 $("#ViewChartLogout").trigger('click');
+                            });
+                           
+                        }
+                        else {
+                            $('#myModal').modal({ backdrop: 'static', keyboard: false });
+                            event.preventDefault();
+                        }
+                    },
+                    failure: function (response) {
+                        // alert(response.responseText);
+                    },
+                    error: function (response) {
+                        // alert(response.responseText);
+                    }
+                });
+            });
+        });
+
+
+        $("body").on("change", "#ddlRange", function () {
+            var range = $(ddlRange).find("option:selected").val();
+            var ddlCustomers = $("#ddlChart");
+
+
+            if (range == "Daily Retail") {
+                swal("Please select only 30 days to see Daily Retail Pricing!")
+                //alert("Please select only 30 days to see daily Retail data.");
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option>');
+            }
+            else if (range == "Daily Bulk") {
+                swal("Please select only 30 days to see Daily Bulk Pricing!")
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option>');
+            }
+            else if (range == "Quarterly") {
+                ddlCustomers.empty().append('<option selected="selected" value="bar" >Bar Chart</option>');
+            }
+            else if (range == "Monthly") {
+                swal("Please select 36 Months date range!")
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+            else if (range == "Weekly") {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+            else {
+                ddlCustomers.empty().append('<option selected="selected" value="line" >Line Chart</option><option value="bar" >Bar Chart</option>');
+            }
+        });
+
+        function ShowCommentaries() {
+
+            var ProductId = $('#ddlProduct').val();
+            $.ajax({
+                type: "POST",
+                url: "../ChemicalPricing/GetCommentaries",
+                data: "{ ProductId:" + ProductId + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    $("#Commentaries").html('');
+                    $.each(response, function () {
+                        ;
+                        //ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        $("#Commentaries").append($("<h3 style='font-size:20px !important; font-weight: bold;'> " + this.Text + " </h3>")).append($("<p style='font-size:14px !important'> " + this.Value + " </p>"));
+                    });
+
+                    $("#Comentery").show()
+
+                },
+                failure: function (response) {
+                    // alert(response.responseText);
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+
+        function ShowCommentariesByDeafult() {
+            //;
+            var ProductId = 'None';
+            $.ajax({
+                type: "POST",
+                url: "../ChemicalPricing/GetCommentaries/ProductId?=None",
+                //data: "{ ProductId: "+ ProductId +"}" ,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    $("#Commentaries").html('');
+                    $.each(response, function () {
+                        ;
+                        //ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']));
+                        $("#Commentaries").append($("<h3 style='font-size:20px !important; font-weight: bold;'> " + this.Text + " </h3>")).append($("<p style='font-size:14px !important'> " + this.Value + " </p>"));
+                    });
+
+
+
+                },
+                failure: function (response) {
+                    // alert(response.responseText);
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+
+
+
+    </script>
+    <script>
+    function SubmitForm() {
+        $("#todate").datepicker("option", "disabled", false);
+            var Product = @Html.Raw(Product);
+            var ChartType = @Html.Raw(ChartType);
+            var range = @Html.Raw(range);
+            var Category = @Html.Raw(Category);
+
+
+            //  $('#ddlProduct').val();
+            //if ( $('#ddlProduct').val()!=Product && $('#ddlProduct').val()!='')// Calling validation function
+            //{
+            //    $('#myModal').modal({backdrop: 'static', keyboard: false});
+            //    event.preventDefault();
+            //}
+
+        }
+
+
+        function ResetForm()
+        {
+            ;
+            var Product = @Html.Raw(Product);
+            var ChartType = @Html.Raw(ChartType);
+            var range = @Html.Raw(range);
+            var Category = @Html.Raw(Category);
+
+            $('#ClearValue').val('ClearMaxValue');
+
+            //  $('#ddlProduct').val();
+            if ( $('#ddlProduct').val()!=Product && $('#ddlProduct').val()!='')// Calling validation function
+            {
+                $('#myModal').modal({backdrop: 'static', keyboard: false});
+                event.preventDefault();
+            }
+
+        }
+        $('#category').change(function(e){
+                var CatId=$('#category').find("option:selected").val();
+
+                var ddlCustomers = $("#ddlProduct");
+                //  var ddlCompare = $("#example-getting-started");
+                // example-getting-started
+                ddlCustomers.empty().append('<option selected="selected" value="" disabled = "disabled">Loading.....</option>');
+                $.ajax({
+                    type: "POST",
+                    url: "../ChemicalPricing/GetProductNameByAccess",
+                    data: "{ CatId:"+ CatId +"}" ,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (response) {
+                        ddlCustomers.empty().append('<option selected="selected" value=""> select Product</option>');
+                        //ddlCompare.empty().append('<option selected="selected" value="0"> select Product</option>');
+
+                        $.each(response, function () {
+
+                            if (this['Selected'] == true) {
+                                ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']));
+                            }
+                            else
+                                ddlCustomers.append($("<option></option>").val(this['Value']).html(this['Text']).addClass('true'));
+                            // ddlCompare.append($("<option  ></option>").val(this['Value']).html(this['Text']));
+
+                        });
+                        $("#example-getting-started").multiselect();
+                        var Product = @Html.Raw(Product);
+                        $('#ddlProduct').val(Product);
+                        UpdateYear();
+
+                        // alert("category call");
+                    },
+                    failure: function (response) {
+                        // alert(response.responseText);
+                    },
+                    error: function (response) {
+                        // alert(response.responseText);
+                    }
+                });
+            }).change();
+
+    window.onload = function () {
+        debugger
+            var Product = @Html.Raw(Product);
+            var ChartType = @Html.Raw(ChartType);
+            var range = @Html.Raw(range);
+            var from = @Html.Raw(fromdate);
+        var to = @Html.Raw(todate);
+
+
+        if ($("#ddlRange").val() =="Yearly")
+            {
+                $(".dtcol").hide();
+                $(".FromYearscol").show();
+                $(".ToYearscol").show();
+        }
+
+        var Category = @Html.Raw(Category);
+
+        if (Category!=0) {
+            $('#category').val(Category).trigger('change');;
+        }
+
+        if (Product != null) {
+            $('#ddlProduct').val(Product);
+        }
+        else {
+             $('#ddlProduct').append('<option selected="selected" value=""> Select Product</option>');
+        }
+            $('#ddlProduct').val(Product);
+            $('#ddlChart').val(ChartType);
+            $('#ddlRange').val(range);
+
+            $('#fromdate').val(from);
+            $('#todate').val(to);
+            $('#ddlChart').val(ChartType);
+            //$("#category").val('');
+            var  cyear ='@(ViewBag.CYear==null?"": ViewBag.CYear)'
+
+            if(cyear!= "") {
+                $("#ddlyear").val(cyear)
+            }
+
+            //Drowchart('canvas2','bar');
+            var selected = $("#ddlRange option:selected").text();
+
+            if (selected == "Yearly") {
+                $("#slidecontainer1").show()
+            }
+            else
+            {
+                $("#slidecontainer1").hide()
+        }
+
+
+
+            $('#ddlFyear').val('@(ViewBag.FromYear== null?"": ViewBag.FromYear)');
+            $('#ddlToYear').val('@(ViewBag.ToYear==null?"": ViewBag.ToYear)');
+        };
+
+
+        document.getElementById('drowchart').addEventListener('change', function () {
+            var d = document.getElementById('drowchart').value;
+            //alert(d);
+
+           // Drowchart('canvas', d);
+        });
+
+
+
+        document.getElementById('randomizeData').addEventListener('click', function () {
+            config.data.datasets.forEach(function (dataset) {
+                dataset.data = dataset.data.map(function () {
+                    return randomScalingFactor();
+                });
+
+            });
+
+            window.myLine.update();
+        });
+
+        var colorNames = Object.keys(window.chartColors);
+        document.getElementById('addDataset').addEventListener('click', function () {
+
+            var colorName = colorNames[config.data.datasets.length % colorNames.length];
+            var newColor = window.chartColors[colorName];
+            var newDataset = {
+                label: 'Dataset ' + config.data.datasets.length,
+                backgroundColor: newColor,
+                borderColor: newColor,
+                data: [],
+                fill: false
+            };
+
+            for (var index = 0; index < config.data.labels.length; ++index) {
+                newDataset.data.push(randomScalingFactor());
+            }
+
+            config.data.datasets.push(newDataset);
+            window.myLine.update();
+        });
+
+        document.getElementById('addData').addEventListener('click', function () {
+            if (config.data.datasets.length > 0) {
+                var month = MONTHS[config.data.labels.length % MONTHS.length];
+                config.data.labels.push(month);
+
+                config.data.datasets.forEach(function (dataset) {
+                    dataset.data.push(randomScalingFactor());
+                });
+
+                window.myLine.update();
+            }
+        });
+
+        document.getElementById('removeDataset').addEventListener('click', function () {
+            config.data.datasets.splice(0, 1);
+            window.myLine.update();
+        });
+
+        document.getElementById('removeData').addEventListener('click', function () {
+            config.data.labels.splice(-1, 1); // remove the label first
+
+            config.data.datasets.forEach(function (dataset) {
+                dataset.data.pop();
+            });
+
+            window.myLine.update();
+        });
+
+
+        function setdtval() {
+        debugger
+            $(".lgndchk").hide();
+            $('input[name="hiddenLegends"]').val("");
+            if($("#ddlRange").val() =="Quarterly"  || $("#ddlRange").val()   ==  "Weekly"){
+                $(".dtcol").hide();
+                $(".yrcol").show();
+                $(".FromYearscol").hide();
+                $(".ToYearscol").hide();
+            }
+            else if ($("#ddlRange").val() =="Yearly")
+            {
+                $(".dtcol").hide();
+                $(".FromYearscol").show();
+                $(".ToYearscol").show();
+            }
+            else {
+                 $(".FromYearscol").hide();
+                 $(".ToYearscol").hide();
+                 $(".dtcol").show();
+                 $(".yrcol").hide();
+                 resetdates()
+            }
+            if($("#ddlRange").val() =="Quarterly"){
+
+
+            }
+        }
+
+        $(document).ready(function () {
+
+            //if("#ddlRange option:selected").text()=="Yearly") {
+            //    $("#slidecontainer").show();
+            //}
+
+
+
+            $("#ShowChart").validate({
+                debug: true,
+                rules: {
+                    ddlProduct: {
+                        required: function () {
+                            if ($("#ddlProduct option[value='0']")) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    },
+                    ddlChart: {
+                        required: function () {
+                            if ($("#ddlChart option[value='0']")) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }, ddlRange: {
+                        required: function () {
+                            if ($("#ddlRange option[value='0']")) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                },
+                messages: {
+                    ddlRange: "range Required",
+                },
+            });
+
+
+        })
+
+
+        //  $('#ddlRange').on('change', function() {
+        //alert( this.value );
+        //  });
+
+    </script>
+
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+
+        document.getElementById("myRange").onmousedown = function () { mouseDown() };
+        document.getElementById("myRange").onmouseup = function () { mouseUp() };
+
+        function mouseDown() {
+            //document.getElementById("demo").innerHTML = "The mouse button is held down.";
+        }
+
+        function mouseUp() {
+            output.innerHTML = slider.value;
+            //alert(slider.value)
+
+            $("#MinValue").val($("#myRange").attr("min"));
+            $("#MaxValue").val(slider.value);
+
+            $(".mt27").trigger("click");
+
+        }
+    </script>
+    <script>
+        //function generatePDF() {
+        //  // Choose the element that our invoice is rendered in.
+        //  const element = document.getElementById("invoice");
+        //  // Choose the element and save the PDF for our user.
+        //  html2pdf().from(element).save();
+        //}
+
+        function generatePDF() {
+            //// Choose the element that our invoice is rendered in.
+            //const element = document.getElementById("invoice");
+            //// Choose the element and save the PDF for our user.
+            //html2pdf()
+            //  .set({ html2canvas: { scale: 4, orientation: 'landscap' } })
+            //  .from(element)
+            //  .save();
+
+
+            var element = document.getElementById('invoice');
+
+            // Choose pagebreak options based on mode.
+            var mode = "avoid-all";
+            var pagebreak = (mode === 'specify') ?
+                { mode: '', before: '.before', after: '.after', avoid: '.avoid' } :
+                { mode: mode };
+
+            $("#exportxls2").hide();
+            $("#hrefComentery").hide();
+            $("#slidecontainer1").hide();
+            $("#submitReset").hide();
+
+
+            // Generate the PDF.
+            html2pdf().from(element).set({
+                filename: "Chemical-Pricing-Export" + '.pdf',
+                pagebreak: pagebreak,
+                jsPDF: { orientation: 'landscape', unit: 'in', format: 'letter', compressPDF: true }
+            }).save().then(function (pdf) {
+                //This logs the right base64
+                $("#hrefComentery").show();
+                $("#exportxls2").show();
+                $("#slidecontainer1").show();
+                $("#submitReset").show();
+
+                // window.location.reload();
+            });;
+
+
+
+        }
+       $(document).ready(function () {
+         debugger
+             var to = @Html.Raw(todate);
+             if (to=="") {
+                $("#todate").datepicker("option", "disabled", true);
+            }
+
+            var ddlCompare = $("#example-getting-started");
+            $.ajax({
+                type: "POST",
+                url: "../ChemicalPricing/GetSubscribedProduct",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    $.each(response, function () {
+                        ddlCompare.append($("<option></option>").val(this['Value']).html(this['Text']));
+                    });
+                    $("#example-getting-started").multiselect();
+                    // alert("category call");
+                },
+                failure: function (response) {
+                    // alert(response.responseText);
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+
+            $("#ddlProduct").on("change", function () {
+                var productId = $("#ddlProduct option:selected").val()
+                var opts = $('#example-getting-started option[value="' + productId + '"]');
+                opts.prop('disabled', true).prop('selected', false);
+                opts = $('#example-getting-started option[value!="' + productId + '"]');
+                opts.prop('disabled', false).prop('selected', false);
+                $("#example-getting-started").multiselect('refresh');
+            });
+        });
+
+
+        function clearClick(e) {
+            $("#example-getting-started").multiselect("clearSelection");
+            return false;
+        }
+    </script>
+    <script src="~/js/active.js"></script>
+    <script src="~/js/customer_responsive.js"></script>
+</body>
+
+</html>

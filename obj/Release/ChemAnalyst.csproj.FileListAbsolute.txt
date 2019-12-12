@@ -1,0 +1,9 @@
+E:\Shafi\ChemanalystAdmin\bin\ApplicationInsights.config
+E:\Shafi\ChemanalystAdmin\bin\ChemAnalyst.dll.config
+E:\Shafi\ChemanalystAdmin\bin\ChemAnalyst.dll
+E:\Shafi\ChemanalystAdmin\bin\ChemAnalyst.pdb
+E:\Shafi\ChemanalystAdmin\bin\Newtonsoft.Json.dll
+E:\Shafi\ChemanalystAdmin\bin\evointernal.dat
+E:\Shafi\ChemanalystAdmin\obj\Release\ChemAnalyst.csproj.CoreCompileInputs.cache
+E:\Shafi\ChemanalystAdmin\obj\Release\ChemAnalyst.dll
+E:\Shafi\ChemanalystAdmin\obj\Release\ChemAnalyst.pdb

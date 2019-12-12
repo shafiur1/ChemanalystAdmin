@@ -1,0 +1,317 @@
+﻿@model ChemAnalyst.ViewModel.NewsHomeViewModel
+
+
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    if (Session["UserRole"] != null && Session["UserRole"].ToString().ToUpper() == "CUSTOMER")
+    {
+        Layout = "~/Views/Shared/_LayoutCustomer_Industry.cshtml";
+        <style>
+           .addMargin {
+                margin-left: 10px;
+            }
+             .addMarginRight {
+                margin-right: 30px;
+                    margin-top: -15px;
+            }
+             .reamore{
+                 margin-left: 15px;
+             }
+        </style>
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutUser1.cshtml";
+    }
+
+}
+
+<body>
+    <style>
+        ::placeholder { /* Firefox, Chrome, Opera */
+            color: #fff;
+        }
+
+        :-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #fff;
+        }
+
+        ::-ms-input-placeholder { /* Microsoft Edge */
+            color: #fff;
+        }
+    </style>
+
+    @if (Session["UserRole"] == null)
+    {
+        <div class="inner-banner">
+            <img src="~/images/about-banner.jpg">
+            <h1>News</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">News</li>
+            </ol>
+
+        </div>
+    }
+
+    <div class="page-content">
+        <div class="static-page" style="background: #fff;">
+
+            <div class="container addMargin">
+
+                <div class="bloglist">
+
+                    <div class="row">
+                        @if (Session["UserRole"] == null)
+                        {
+                            <div class="col-lg-12">
+                                <div class="searchbox" style="margin-top: 10px">
+                                    @using (Html.BeginForm("NewsHome", "NewsAndDeals", null, FormMethod.Post, new { @class = "row", enctype = "multipart/form-data" }))
+                                    {
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.search,
+                                     new { @id = "search", @class = "plbxt btn btn-primary fromdate width100", @placeholder = "From date", @autocomplete = "off" })
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.searchto,
+                                 new { @id = "searchto", @class = "plbxt btn btn-primary todate width100", @placeholder = "To date", @autocomplete = "off" })
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.keyword,
+                                     new { @id = "keyword", @placeholder = "Keyword", @class = "  btn btn-primary width100" })
+
+
+                                        </div>
+
+                                        <div class="col-md-2 pl-0" style="margin-left: 15px;">
+                                            <button type="submit" class="btn btn-green">
+                                                <i class="fa fa-filter"></i>Filter
+                                            </button>
+                                            <button type="submit" class="btn btn-green" onclick="ClearSearch()">
+                                                <i class="fa fa-filter"></i>Clear
+                                            </button>
+
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+
+
+                            <div class="col-lg-12" style="margin-bottom:10px;">
+                                <div class="searchbox" style="margin-top:20px;">
+                                    @using (Html.BeginForm("NewsHome", "NewsAndDeals", null, FormMethod.Post, new { @class = "row", enctype = "multipart/form-data" }))
+                                    {
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.search,
+                                         new { @id = "search", @class = "plbxt btn btn-primary fromdate width100", @placeholder = "From date", @autocomplete = "off" })
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.searchto,
+                                 new { @id = "searchto", @class = "plbxt btn btn-primary todate width100", @placeholder = "To date", @autocomplete = "off" })
+                                        </div>
+                                        <div class="col-md-3">
+                                            @Html.TextBoxFor(m => m.keyword,
+                                 new { @id = "keyword", @placeholder = "Keyword", @class = "  btn btn-primary width100" })
+
+
+                                        </div>
+                                        <div class="col-md-2 pl-0" style="margin-left: 15px;">
+                                            <button type="submit" class="btn btn-green">
+                                                <i class="fa fa-filter"></i>
+                                                Filter
+                                            </button>
+
+                                            <button type="submit" class="btn btn-green" onclick="ClearSearch()">
+                                                <i class="fa fa-filter"></i>Clear
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="width100" style="height:30px"></div>
+                        @foreach (var item in Model.NewsList)
+                        {
+                            <div class="col-md-6 col-sm-6">
+                                <div class="post-item clearfix">
+                                    <div class="row">
+                                        <script>
+                                            function showmodel() {
+                                                $("#myModal").show();
+                                            }
+                                        </script>
+                                        <div class="themestek-box-content col-md-12 col-sm-12" style="margin-left : 15px">
+                                            <div class="news-text">
+                                                <h4>
+                                                    @if (Session["UserRole"] == null)
+                                                    {
+                                                        <a href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">@(item.NewsName.Length > 40 ? (item.NewsName.Substring(0, 40)) : item.NewsName)...</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a id="News_@item.id" onclick="CheckAccessNew(@item.id)" href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">@(item.NewsName.Length > 40 ? (item.NewsName.Substring(0, 40)) : item.NewsName)...</a>
+                                                    }
+                                                </h4>
+                                                @{
+                                                    if (item.NewsDiscription.Length > 100)
+                                                    {
+                                                        <p>@Html.Raw(WebUtility.HtmlDecode(item.NewsDiscription.Substring(0, 70)))... </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>item.NewsDiscription... </p>
+                                                    }
+                                                }
+                                                <div class="row mt-3">
+                                                    <div class="col-8">
+                                                        @if (Session["UserRole"] == null)
+                                                        {
+                                                            <a class="reamore" style="font-size:11px" href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">Read More <i class="fa fa-arrow-right"></i></a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a class="reamore" id="News_read_@item.id" onclick="CheckAccessNew(@item.id)" style="font-size:11px" href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">Read More <i class="fa fa-arrow-right"></i></a>
+                                                        }
+                                                    </div>
+                                                    <div class="col-4 text-right addMarginRight" style="font-size: 11px;">
+                                                        <span style="margin-right:15px"><i class="fa fa-calendar"></i> @item.CreatedTime.Date.ToString("MMM/yyyy") </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                @Html.PagedListPager(Model.NewsList, page => Url.Action("NewsHome", new { page }))
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content login-pic">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="login-pic">
+                                <div class="freeSub">
+                                    <h2 style="color:black">Get access to detailed News.</h2>
+                                    <a target="_blank" href="@Url.Action("FreeTrail", "ChemAnalyst")" class="btn btn-yellow">Start your Free Trail today.</a>
+                                    <a href="@Url.Action("NewsHome", "NewsAndDeals")" class="btn btn-yellow">Go Back</a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("LogOut", "Login", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <button type="submit" id="ViewChartLogout" value="ViewChartLogout" name="submit" style="display:none"></button>
+    }
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    @*<script src="../js/jquery.js"></script>
+        <script src="../js/jquery-3.3.1.slim.min.js"></script>*@
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    @*<script src="http://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.17.1/simple-lightbox.js"></script>*@
+    <script src="../js/owl.carousel.js"></script>
+    <script src="../js/wow.min.js"></script>
+    @*<script src="../js/honey-custom.js"></script>*@
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+
+    <script>
+    function CheckAccessNew(NewID) {
+        
+       
+            //var ProductId = $(ddlProduct).find("option:selected").val();
+            debugger;
+            $.ajax({
+                type: "POST",
+                url: "../NewsAndDeals/CheckAccessNew",
+                data: "{ NewsID:" + NewID + "}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    debugger;
+                    if (response == "Access") {
+                        $("#hrfDetails").trigger("click");
+                    }
+                    else if (response == "SubscriptionExpired") {
+                         $("#News_" + NewID).attr("href", "#");
+                        swal("Your subscription has been expired!").then(function myfunction() {
+                            debugger
+                            $("#ViewChartLogout").trigger('click');
+                        });
+                    }
+                    else {
+                        $("#News_" + NewID).attr("href", "#");
+                        $("#News_read_" + NewID).attr("href", "#");
+                        
+                        $("#myModal").show();
+                       // swal("Get Chemical Pricing in few-clicks!");
+                        //$('#myModal').modal({ backdrop: 'static', keyboard: false });
+                        //event.preventDefault();
+                    }
+                },
+                failure: function (response) {
+                    // alert(response.responseText);
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function ClearSearch() {
+            $("#search").val('');
+            $("#searchto").val('');
+            $("#keyword").val('');
+
+        }
+        $(function () {
+
+            jQuery('.fromdate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function (selected) {
+
+                }
+            });
+            jQuery('.todate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function (selected) {
+
+
+
+                }
+            });
+            var d = new Date();
+
+            $('.fromdate').val('@ViewBag.formdate');
+            $('.todate').val('@ViewBag.todate');
+        });
+    </script>
+</body>

@@ -1,0 +1,177 @@
+﻿@model ChemAnalyst.ViewModel.DealsDetailsViewModel
+@{
+    if (Session["UserRole"] != null && Session["UserRole"].ToString().ToUpper() == "CUSTOMER")
+    {
+        Layout = "~/Views/Shared/_LayoutCustomer_Industry.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutUser6.cshtml";
+    }
+
+}
+
+    <body>
+        @if (Session["UserRole"] == null)
+        {
+
+        <div class="inner-banner">
+            <img src="/images/about-banner.jpg">
+            <h1>Latest Deals</h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="@Url.Action("DealsHome", "NewsAndDeals")">All Deals</a></li>
+            </ol>
+        </div>
+        }
+
+            <div class="page-content">
+                <div class="static-page" style="    background: #fff;">
+                    <div class="container addMargin">
+
+                        <div class="row">
+
+                            <div class="col-md-9">
+
+                                <div class="blog-detail" style="margin-top: 20px;">
+                                    @{
+                                        <a href="@Url.Action("DealsHome", "NewsAndDeals")" class="previous" style="text-decoration: none;display: inline-block;padding: 8px 16px;  background-color: #d6d6d6; color: black;">« Back</a>
+                                        <br /><br />
+                                        if (Session["UserRole"] != null && Session["UserRole"].ToString().ToUpper() == "CUSTOMER")
+                                        {
+
+                                            if (!string.IsNullOrEmpty(Model.Deals.DealsImg))
+                                            {
+                                                <div class="blog-big-pic"><img src="~/ProductImages/@Model.Deals.DealsImg" alt=""></div>
+                                            }
+
+                                <div class="blog-detail-summary">
+
+                                    <h1 style="font-size: 1.5rem;color: #518dc8;">@Model.Deals.DealsName</h1>
+
+
+
+                                   
+                                            <p style="color:#2a2a2a">@Html.Raw(WebUtility.HtmlDecode(Model.Deals.DealsDiscription)) </p>
+                                    
+
+
+                                </div>
+                                        }
+                                        else
+                                        {
+                                            if (!string.IsNullOrEmpty(Model.Deals.DealsImg))
+                                            {
+                                                <div class="blog-big-pic"><img src="~/ProductImages/@Model.Deals.DealsImg" alt=""></div>
+                                            }
+
+                                <div class="blog-detail-summary">
+
+                                    <h1 style="font-size: 1.5rem;color: #518dc8;">@Model.Deals.DealsName</h1>
+
+
+
+
+                                    @{
+                                        if (Model.Deals.DealsDiscription.Length > 300)
+                                        {
+                                            <p style="color:#2a2a2a">@Html.Raw(WebUtility.HtmlDecode(Model.Deals.DealsDiscription.Substring(0, 300)))... </p>
+                                        }
+                                        else
+                                        {
+                                             <p style="color:#2a2a2a">@Html.Raw(WebUtility.HtmlDecode(Model.Deals.DealsDiscription))... </p>
+                                        }
+                                    }
+
+                                    <div class="btn subscription-btn"><a href="~/ChemAnalyst/FreeTrail">Click Here to Subscribe</a></div>
+
+                                </div>
+                                        }
+
+                                    }
+
+                                </div>
+
+
+                            </div>
+
+                            @if (Session["UserRole"] == null)
+                            {
+                        <div class="col-md-3">
+
+                            <aside>
+                                <h3><i class="fa fa-bell-o"></i> News <a href="@Url.Action("NewsHome","NewsAndDeals")" class="pull-right" style="font-size: 14px; margin-top: 4px; color:#fff">View all</a></h3>
+
+                                <div class="side-news-feed">
+
+                                    @foreach (var news in Model.NewsList)
+                                    {
+                                        <div class="news-feed-col">
+                                            <a style="font-size: 14px;font-weight: 600;" href="@Url.Action("NewsDetails", "NewsAndDeals", new { id = news.GenerateItemNameAsParam() })">
+                                                @{
+
+                                                    <span>
+                                                        @Html.Raw(WebUtility.HtmlDecode(news.NewsName))
+                                                    </span>
+
+
+                                                }
+
+                                                <div class="right-news-desc2" style="font-size:14px">
+                                                    <br />
+                                                    <p><i class="fa fa-calendar-o"></i>@news.CreatedTime.ToString("MMM/yyyy")</p>
+                                                </div>
+                                            </a>
+
+                                        </div>
+
+                                    }
+
+                                </div>
+
+                                <div class="mt-4">
+                                    <h3><i class="fa fa-thumbs-up"></i> Top Deals <a href="@Url.Action("DealsHome","NewsAndDeals")" class="pull-right" style="font-size: 14px; margin-top: 4px; color:#fff">View all</a></h3>
+                                    <div class="side-news-feed" style="">
+                                        @foreach (var item in Model.DealList)
+                                        {
+                                            <div class="news-feed-col">
+                                                <a style="font-size: 14px;font-weight: 600;" href="@Url.Action("DealsDetails", "NewsAndDeals", new { id = item.GenerateItemNameAsParam() })">
+                                                    @{
+
+                                                        <span>
+                                                            @Html.Raw(WebUtility.HtmlDecode(item.DealsName))
+                                                        </span>
+
+
+                                                    }
+                                                    <div class="right-news-desc2">
+                                                        <br />
+                                                        <p><i class="fa fa-calendar-o"></i>@item.CreatedTime.Value.ToString("MMM/yyyy")</p>
+                                                    </div>
+                                                </a>
+
+                                            </div>
+                                        }
+
+                                    </div>
+                                    </div>
+                            </aside>
+
+                        </div>
+
+                            }
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+        </body>

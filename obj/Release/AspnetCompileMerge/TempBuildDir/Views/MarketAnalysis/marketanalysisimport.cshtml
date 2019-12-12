@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<title>Market Analysis </title>
+@*<link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="~/css/style.css" type="text/css"/>
+    <link rel="stylesheet" href="~/css/build.css" type="text/css" />
+    <link href="~/css/font-awesome.min.css" rel="stylesheet">*@
+<script type="text/javascript">
+    $("body").on("change", "#ddlProduct", function () {
+        var c = $(ddlProduct).find("option:selected").val();
+        // alert(c)
+        $("#hdproductid").val($(ddlProduct).find("option:selected").val());
+    });
+    $("body").on("change", "#type", function () {
+        $("#hdImpType").val($(type).find("option:selected").text());
+    });
+</script>
+
+
+
+
+
+
+
+<div class="update-profile-wrapper">
+
+    <h3>Market Analysis Import</h3>
+
+
+
+    <div class="white-wrapper">
+
+        <div class="col-md-6 col-md-offset-3">
+            <div class="">
+                <div class="form-group">
+                    <div style="height:60PX"></div>
+                    @*<span style="color:green"> @ViewBag.Messge</span>*@
+
+                    @{
+                        if (ViewBag.Status == "Fail")
+                        {
+                            if (@ViewBag.Messge != null)
+                            {
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewBag.Messge
+                                </div>
+
+                            }
+                        }
+                        else
+                        {
+                            if (@ViewBag.SuccesMessge != null)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @ViewBag.SuccesMessge
+                                </div>
+
+                            }
+                        }
+
+
+
+                    }
+                </div>
+            </div>
+
+            <div class="import-form eq-form-box">
+
+                <div class="change-pass-box">
+                    @using (Html.BeginForm("CompanyUpload", "MarketAnalysis", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+
+                        <div class="col-sm-4 col-lg-12 form-group">
+
+                            @Html.DropDownList("ddlProduct", new SelectList(ViewBag.ProductList, "Value", "Text"), "Please select Product", new { @id = "ddlProduct", @class = "form-control", @required = "required" })
+                            @Html.Hidden("hdproductid", null, new { @id = "hdproductid" })
+                            <select class="form-control" id="type" required>
+                                <option value="">Select Import File type Type</option>
+                                <option value="1">Company</option>
+                                <option value="2">Location</option>
+                                <option value="3">Technology</option>
+                                <option value="4">Process</option>
+                                <option value="5">Production</option>
+                                <option value="6">Operating Efficiency</option>
+                                @*<option value="7">Demand By EndUse(%)</option>*@
+                                <option value="8">Demand By EndUse(T)</option>
+                                @*<option value="9">Demand By Grade(%)</option>*@
+                                <option value="10">Demand By Grade(T)</option>
+                                @*<option value="11">Demand By Type(%)</option>*@
+                                <option value="12">Demand By Type(T)</option>
+                                <option value="13">Demand By SalesChannel(T)</option>
+                                @*<option value="14">Demand By SalesChannel(%)</option>*@
+                                @*<option value="15">Demand By GradePricing</option>*@
+                                <option value="16">Demand By Region(T)</option>
+                                @*<option value="17">Demand By Region(%)</option>*@
+                                <option value="18">Demand By TradeExport</option>
+                                <option value="19">Demand By TradeImport</option>
+                                <option value="20">Demand Supply Gap</option>
+                                <option value="22">Demand Supply Gap Graph</option>
+                                <option value="21">Demand By CompanyShares(T)</option>
+
+                                @*<option value="22">Demand By CompanyShares(%)</option>*@
+
+                            </select>
+                            @Html.Hidden("Typelist", null, new { @id = "hdImpType" })
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                <input type="file" name="file" class="custom-file-input" required />
+
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                @Html.TextArea("UploadFileDiscription", new { @class = "form-control", @rows = 4, @placeholder = "Description * ", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-12">
+                            <div class="form-group">
+                                @Html.CheckBox("ReplaceData")
+                                <label for="inlineCheckbox2">Do you want to Replace / delete existing file? </label>
+                            </div>
+                        </div>
+
+
+
+                        <div class="btn-wrapper">
+
+                            <a class="gray-btn" href="@Url.Action("MarketAnalysisList","MarketAnalysis")">Cancel</a>
+                            <input type="submit" class="btn blue-btn" value="Upload">
+
+
+                        </div>
+
+                    }
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.custom-file-input').change(function (e) {
+            var productName = $("#ddlProduct option:selected").text().trim();
+            var subType = $("#type option:selected").text().trim();
+            var fileName = e.target.files[0].name;
+            var nameArr = fileName.split('.')[0].split('_');
+            if (nameArr.length > 0) {
+                if (!(nameArr[0].toLowerCase() === productName.toLowerCase() && nameArr[1].toLowerCase() === subType.toLowerCase())) {
+                    swal({
+                        text: "The selected file is Incorrect. Please check and upload again"
+                    })
+                        .then(() => {
+                            document.location.reload(true);
+                        });
+                    //$($('.custom-file-input')[0]).val('')//code to remove file incase needed
+                    $('input[type=submit]').attr('disabled', 'disabled');
+                } else {
+                    $('input[type=submit]').removeAttr('disabled');
+                }
+            }
+        });
+    });
+</script>

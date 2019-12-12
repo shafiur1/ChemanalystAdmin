@@ -1,0 +1,294 @@
+﻿<
+@{
+    ViewBag.Title = "Lead Management";
+    Layout = "~/Views/Shared/_LayoutUser3.cshtml";
+}
+<div class="inner-banner">
+    <img src="~/images/about-banner.jpg">
+    <h1>Contact Us</h1>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Contact Us</li>
+    </ol>
+</div>
+<div class="page-content">
+    <div class="contact-page">
+        <div class="container">
+            <div class="contact-main">
+                <div class="row">
+                    <div class="col-md-7 pr-0">
+                        <div class="contact-wrapper">
+                            <div class="contact-social">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="contact-blue-wrapper">
+                                <div class="contact-blue-box">
+                                    <div class="row">
+                                        <div class="head-wht">
+                                            <p>Feel Free to contact us</p>
+                                            <small>We are happy to hear from you. Please fill the form below.</small>
+                                        </div>
+                                        <form class="eq-form">
+                                            <div class="col-sm-12 form-group">
+                                                <input type="text" value="" id="Name" name="Name" size="40" class="form-control" placeholder="Name">
+                                            </div>
+                                            <div class="col-sm-12 form-group">
+                                                <input type="email" placeholder="me@example.com" id="OfficialEmail" name="OfficialEmail" value="" size="40" class="form-control" required>
+                                            </div>
+                                            <div class="col-sm-12 form-group">
+                                                <input type="text" onkeypress="return isNumberKey(event)" value="" id="Mobile" name="Mobile" size="40" class="form-control" placeholder="Mobile / Office Landline No." required>
+                                                <span style="color:#fff; font-style:italic; font-size:12px">(*Input without country code and special characters)</span>
+                                            </div>
+                                            <div class="col-sm-12 form-group">
+                                                <input type="text" value="" size="40" id="Organization" name="Organization" class="form-control" placeholder="Organization" required>
+                                            </div>
+                                            <div class="col-sm-12 form-group">
+                                                @*<input type="text" value="" size="40" id="Country" name="Country" class="form-control" placeholder="Country">*@
+                                                @Html.DropDownList("Country", ChemAnalyst.DAL.ProductDataStore.GetCountry(), "Select Country", new { @class = "form-control", @name = "Country", @style= "color: #fff; background:#4b80e0" })
+                                            </div>
+                                            <div class="col-sm-12 form-group">
+                                                @*<input type="text" value="" size="40" id="State" name="State" class="form-control" placeholder="State">*@
+                                                @Html.DropDownList("State", ChemAnalyst.DAL.ProductDataStore.GetState(), "Select State", new { @class = "form-control", @name = "State", @style = "color: #fff; background:#4b80e0" })
+                                            </div>
+                                            @*<div class="col-sm-12 form-group">
+                                                <input type="text" value="" size="40" class="form-control" placeholder="City" id="City" name="City" required>
+                                            </div>*@
+                                            @*<div class="col-sm-12 form-group">
+                                                <textarea class="form-control" rows="3" id="comment" placeholder="Description"></textarea>
+                                            </div>*@
+                                            @*<div class="col-sm-12 form-group btn-submit"> <a class="send-btn" href="#">Send Message</a> </div>*@
+
+                                            <div class="col-sm-12 form-group btn-submit"> <input type="submit" id="btnSaveContact" class="common-btn" data-loading-text="Please wait..." value="Send Message"></div>
+                                           
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 pl-0">
+                        <div class="map-location">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.117928755172!2d72.88367561421309!3d19.10248175610515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c86e0f75d2d1%3A0x4d84e44aa42264d3!2sSagar%20Tech%20Plaza.!5e0!3m2!1sen!2sin!4v1568794727607!5m2!1sen!2sin" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="hair-restoration-sec">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="about-hair-color">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="hair-color-detail-heading"> <h3> Get in Touch </h3></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <!--<div class="get-touch-wrapper">
+                                      <div class="get-touch-box">
+                                            <div class="get-touch-pic">
+                                                <img src="~/images/get-in-touch01.png" alt="">
+                                            </div>
+                                            <div class="get-touch-txt">
+                                                <strong>NORTH AMERICA OFFICE</strong>
+                                                <p>
+                                                    <i class="fa fa-phone"></i> Call 001-002-0003<br>
+                                                    <a href="#"><i class="fa fa-envelope"></i> info@domainname.com</a><br>
+                                                    <a href="#"><i class="fa fa-globe"></i> www.doaminname.com</a><br>
+                                                    <i class="fa fa-map-marker"></i> B-44 sector-57 noida
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>-->
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="get-touch-wrapper">
+                                        <div class="get-touch-box">
+                                            <div class="get-touch-pic">
+                                                <img src="~/images/get-in-touch02.png" alt="">
+                                            </div>
+                                            <div class="get-touch-txt">
+                                                <strong>MUMBAI OFFICE</strong>
+                                                <p>
+                                                    <i class="fa fa-phone"></i> Call   +91-8882336899<br>
+                                                    <a href="#"><i class="fa fa-envelope"></i> sales@chemanalyst.com</a><br>
+                                                    <i class="fa fa-map-marker"></i>Trade Square, 404-A Wing,Next to Sugar Tech Plaza, Sakinaka Andheri
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="get-touch-wrapper">
+                                        <div class="get-touch-box">
+                                            <div class="get-touch-pic">
+                                                <img src="~/images/get-in-touch03.png" alt="">
+                                            </div>
+                                            <div class="get-touch-txt">
+                                                <strong>DELHI-NCR OFFICE</strong>
+                                                <p>
+                                                    <i class="fa fa-phone"></i> Call   +91-8882336899<br>
+                                                    <a href="#"><i class="fa fa-envelope"></i> sales@chemanalyst.com</a><br>
+                                                    <i class="fa fa-map-marker"></i> B-44 sector-57 Noida, National Captial Region
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="../js/popper.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+
+<script>
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    function isValidEmailAddress(emailAddress) {
+        debugger;
+        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        return pattern.test(emailAddress);
+    }
+
+
+
+
+    $(function () {
+        $("#btnSaveContact").click(function () {
+            debugger
+             $("#btnSaveContact").prop('disabled', true); 
+            if ($("#Name").val() == "") {
+                swal("Warning", "Please enter name :)", "error");
+                $("#btnSaveContact").prop('disabled', false);
+                return false;
+            }
+            if ($("#OfficialEmail").val() == "") {
+                swal("Warning", "Please enter email :)", "error");
+                $("#btnSaveContact").prop('disabled', false);
+                return false;
+            }
+            if ($("#OfficialEmail").val()!= "") {
+                if (!isValidEmailAddress($("#OfficialEmail").val())) {
+                    debugger
+                    swal("Warning", "Invalid email address :)", "error");
+                    $("#btnSaveContact").prop('disabled', false);
+                    return false;
+                }
+                else
+                {
+                   
+                }
+            }
+           
+
+
+            if ($("#Mobile").val() == "") {
+                swal("Warning", "Please enter mobile number :)", "error");
+                $("#btnSaveContact").prop('disabled', false);
+                return false;
+            }
+
+            var freeTrail = {};
+            freeTrail.Name = $("#Name").val();
+            freeTrail.OfficalEmail = $("#OfficialEmail").val();
+            freeTrail.Mobile = $("#Mobile").val();
+            freeTrail.Organisation = $("#Organization").val();
+            freeTrail.State = $("#State").val();
+            freeTrail.Country = $("#Country").val();
+            //freeTrail.City = $("#City").val();
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SendContactUs")',
+                data: freeTrail,
+                success: function (data) {
+                    debugger
+                    if (data.data == "Success") {
+                        //alert("Data has been added successfully.");
+                        swal("Thank you!", "We will get back to you shortly.", "success");
+                        $("#Name").val('');
+                        $("#OfficialEmail").val('');
+                        $("#Mobile").val('');
+                        $("#Organization").val('');
+                        $("#State").val('');
+                        $("#Country").val();
+                        //$("#City").val('');
+                        $("#btnSaveContact").prop('disabled', false);
+
+                    }
+                    else {
+                        alert("Error while inserting data");
+                        $("#btnSaveContact").prop('disabled', false);
+                    }
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                    $("#btnSaveContact").prop('disabled', false);
+                }
+            });
+            return false;
+        });
+    });
+
+
+
+
+    $("body").on("change", "#Country", function () {
+        debugger
+        var country = $(Country).find("option:selected").val();
+
+        var state = $("#State");
+        state.empty().append('<option selected="selected" value="" disabled = "disabled">Loading.....</option>');
+        $.ajax({
+            type: "POST",
+            url: "../ChemAnalyst/GetState",
+            data: JSON.stringify({ 'country': country }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (response) {
+                debugger
+                state.empty().append('<option selected="selected" value=""> Select State</option>');
+                $.each(response, function () {
+                    state.append($("<option></option>").val(this['Value']).html(this['Text']));
+                });
+            },
+            failure: function (response) {
+                // alert(response.responseText);
+            },
+            error: function (response) {
+                // alert(response.responseText);
+            }
+        });
+
+      
+    });
+</script>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>

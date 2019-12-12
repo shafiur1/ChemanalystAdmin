@@ -1,0 +1,90 @@
+﻿@*@model List<ChemAnalyst.Models.SA_Commentary>*@
+@model ChemAnalyst.ViewModel.ComentryVM
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+
+    Layout = "~/Views/Shared/_LayoutUser8.cshtml";
+
+
+}
+
+<body oncontextmenu="return false;">
+
+
+    @if (Session["UserRole"] == null)
+    {
+        <div class="inner-banner">
+            <img src="~/images/about-banner.jpg">
+            <h1>Commentary</h1>
+
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Commentary</li>
+            </ol>
+
+        </div>
+    }
+
+    <div class="page-content">
+        <div class="static-page">
+            <div class="container">
+
+                <div class="bloglist">
+
+                    <div class="row">
+                        @if (Session["UserRole"] == null)
+                        {
+                            <div class="col-lg-12">
+                                <div class="searchbox">
+
+                                </div>
+                            </div>
+                        }
+                        <div class="width100" style="height:30px"></div>
+                        <h2 style="margin-left:18px">@ChemAnalyst.DAL.ProductDataStore.GetProductName(Model.Commentary.FirstOrDefault().Product)</h2>
+                        @foreach (var item in Model.Commentary)
+                        {
+                            <div class="col-md-12 col-sm-12">
+                                <div class="post-item clearfix">
+                                    <div class="row">
+                                        <div class="themestek-box-content col-md-12 col-sm-12">
+                                            <div class="news-text" style="padding:10px 15px 10px 15px">
+                                                @item.CreatedTime.Date.ToString("dd-MMM-yyyy")
+                                                <h4>@(item.Title.Length > 40 ? (item.Title.Substring(0, 40)) : item.Title)...</h4>
+                                                @Html.Raw(WebUtility.HtmlDecode(@item.Description))
+                                                <div class="row mt-3">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+                @Html.PagedListPager(Model.Commentary, page => Url.Action("CommentaryHome", new {ProductId=@ViewBag.ProductId, Type=@ViewBag.Type, MetaDescription = @ViewBag.MetaDescription, page }))
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-3.3.1.slim.min.js"></script>
+    <script src="../js/popper.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    @*<script src="http://cdnjs.cloudflare.com/ajax/libs/simplelightbox/1.17.1/simple-lightbox.js"></script>*@
+    <script src="../js/owl.carousel.js"></script>
+    <script src="../js/wow.min.js"></script>
+    <script src="../js/honey-custom.js"></script>
+
+</body>
